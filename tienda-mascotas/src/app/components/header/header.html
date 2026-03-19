@@ -1,0 +1,21 @@
+<header class="site-header">
+  <div class="header-container">
+    <a routerLink="/" class="logo">
+      <span class="logo-icon">🐾</span>
+      <span class="logo-text">PetShop</span>
+    </a>
+
+    <nav class="main-nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+      <a routerLink="/catalogo" routerLinkActive="active">Catálogo</a>
+    </nav>
+
+    <a routerLink="/carrito" class="cart-btn">
+      <span class="cart-icon">🛒</span>
+      <span class="cart-label">Carrito</span>
+      @if (cartService.totalItems() > 0) {
+        <span class="cart-badge">{{ cartService.totalItems() }}</span>
+      }
+    </a>
+  </div>
+</header>
