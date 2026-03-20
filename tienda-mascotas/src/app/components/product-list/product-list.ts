@@ -10,6 +10,7 @@ import { ProductCard } from '../product-card/product-card';
   styleUrl: './product-list.scss',
 })
 export class ProductList {
+  // Opciones para filtrar por tipo de producto.
   categorias: { key: string; label: string }[] = [
     { key: 'todas', label: 'Todas' },
     { key: 'alimento', label: 'Alimento' },
@@ -18,9 +19,11 @@ export class ProductList {
     { key: 'cuidado', label: 'Cuidado' },
   ];
 
+  // Estado reactivo de filtros de UI.
   categoriaActiva = signal<string>('todas');
   searchTerm = signal<string>('');
 
+  // Lista derivada que se recalcula automaticamente al cambiar filtros.
   productosFiltrados = computed(() => {
     let items = PRODUCTS;
     const cat = this.categoriaActiva();
@@ -38,10 +41,12 @@ export class ProductList {
   });
 
   setCategoria(key: string): void {
+    // Actualiza la categoria activa al pulsar una pestana.
     this.categoriaActiva.set(key);
   }
 
   onSearch(event: Event): void {
+    // Guarda el texto del buscador para filtrar por nombre o descripcion.
     this.searchTerm.set((event.target as HTMLInputElement).value);
   }
 }

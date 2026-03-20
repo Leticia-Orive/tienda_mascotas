@@ -13,6 +13,7 @@ export class CartComponent {
   cartService = inject(CartService);
 
   confirmarPedido(): void {
+    // Simula confirmacion de compra y limpia el carrito.
     alert('✅ ¡Pedido confirmado! Gracias por tu compra en PetShop 🐾');
     this.cartService.vaciarCarrito();
   }
