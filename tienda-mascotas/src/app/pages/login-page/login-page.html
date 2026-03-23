@@ -1,0 +1,80 @@
+<section class="login-wrap">
+  <div class="login-card">
+    <h1>Mi cuenta</h1>
+    <p>Ingresa con tu correo y contrasena o registrate si eres nueva.</p>
+
+    <div class="mode-switch">
+      <button
+        type="button"
+        [class.active]="modo === 'login'"
+        (click)="cambiarModo('login')"
+      >
+        Iniciar sesion
+      </button>
+      <button
+        type="button"
+        [class.active]="modo === 'register'"
+        (click)="cambiarModo('register')"
+      >
+        Registrarme
+      </button>
+    </div>
+
+    @if (mostrarMensajeCierre) {
+      <p class="logout-message">Sesión cerrada correctamente.</p>
+    }
+
+    @if (mostrarMensajeCuentaEliminada) {
+      <p class="feedback ok">Tu cuenta se elimino correctamente.</p>
+    }
+
+    @if (errorMessage) {
+      <p class="feedback error">{{ errorMessage }}</p>
+    }
+
+    @if (successMessage) {
+      <p class="feedback ok">{{ successMessage }}</p>
+    }
+
+    <form class="auth-form" (ngSubmit)="enviarFormulario()">
+      <label for="email">Correo</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        [(ngModel)]="email"
+        placeholder="tu-correo@ejemplo.com"
+        autocomplete="email"
+        required
+      >
+
+      <label for="password">Contrasena</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        [(ngModel)]="password"
+        placeholder="******"
+        autocomplete="current-password"
+        required
+      >
+
+      @if (modo === 'register') {
+        <label for="confirmPassword">Confirmar contrasena</label>
+        <input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          [(ngModel)]="confirmPassword"
+          placeholder="******"
+          autocomplete="new-password"
+          required
+        >
+      }
+
+      <button type="submit" class="btn-primary full-width">
+        {{ modo === 'login' ? 'Entrar a mi cuenta' : 'Crear cuenta' }}
+      </button>
+    </form>
+  </div>
+</section>

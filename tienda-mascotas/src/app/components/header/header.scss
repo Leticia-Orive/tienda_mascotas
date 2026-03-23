@@ -47,6 +47,67 @@
   }
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.user-email {
+  color: var(--text-light);
+  font-weight: 700;
+  font-size: .9rem;
+  margin: 0;
+}
+
+.session-btn {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  border: 2px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text);
+  font-weight: 700;
+  padding: .45rem .9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform .1s, border-color .2s, color .2s;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .session-icon {
+    font-size: 1rem;
+  }
+}
+
+.enter-btn {
+  text-decoration: none;
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.delete-account-btn {
+  border: 2px solid #ef9a9a;
+  background: #fff5f5;
+  color: #c62828;
+  font-weight: 700;
+  padding: .45rem .85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform .1s, background .2s;
+
+  &:hover {
+    transform: translateY(-1px);
+    background: #ffe5e5;
+  }
+}
+
 .cart-btn {
   position: relative;
   display: flex;
@@ -90,7 +151,20 @@
     justify-content: center;
   }
 
+  .header-actions {
+    margin-left: auto;
+  }
+
+  .user-email,
+  .delete-account-btn {
+    display: none;
+  }
+
   .cart-btn .cart-label {
+    display: none;
+  }
+
+  .session-btn span:last-child {
     display: none;
   }
 }
