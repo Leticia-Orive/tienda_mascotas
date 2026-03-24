@@ -1,13 +1,14 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { Product } from '../../models/product.model';
 import { CartService } from '../../services/cart';
 import { AuthService } from '../../services/auth';
 import { Router } from '@angular/router';
+import { QuickCheckoutModal } from '../quick-checkout-modal/quick-checkout-modal';
 
 @Component({
   selector: 'app-product-card',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, QuickCheckoutModal],
   templateUrl: './product-card.html',
   styleUrl: './product-card.scss',
 })
@@ -20,6 +21,10 @@ export class ProductCard {
   @Output() viewRequested = new EventEmitter<Product>();
   @Output() editRequested = new EventEmitter<Product>();
   @Output() deleteRequested = new EventEmitter<number>();
+
+  // Signal que controla si el modal de compra directa esta visible.
+  // Null cuando esta cerrado; contiene el producto cuando se abre.
+  checkoutModalVisible = signal<Product | null>(null);
 
   cartService = inject(CartService);
   // authService se usa para saber si el usuario es admin o cliente
@@ -48,31 +53,42 @@ export class ProductCard {
   }
 
   // Permite comprar un producto directamente sin pasar por el catalogo.
-  // Si el usuario no esta registrado, le ofrece registrarse para obtener
-  // el 10% de descuento en sus primeras 3 compras. Si rechaza el registro,
-  // puede igualmente comprar como invitado.
+  // Abre un modal donde se puede seleccionar cantidad y decidir si registrarse
+  // para obtener descuento (si el usuario es invitado).
   compraInmediata(): void {
     if (this.product.stock < 1) {
       return;
     }
 
-    if (!this.authService.isLoggedIn()) {
-      const quiereRegistro = window.confirm(
-        'Puedes comprar como invitada o registrarte para obtener 10% de descuento en tus primeras 3 compras.\n\nAceptar: Registrarme\nCancelar: Continuar como invitada.'
-      );
+    // Abre el modal de checkout
+    this.checkoutModalVisible.set(this.product);
+  }
 
-      if (quiereRegistro) {
-        // Redirige al login en modo registro y, tras completarlo,
-        // devuelve al usuario directamente al carrito (returnUrl).
-        this.router.navigate(['/login'], {
-          queryParams: { returnUrl: '/carrito', mode: 'register' }
-        });
-        return;
-      }
+  // Maneja el resultado del modal de compra directa.
+  // Si el usuario confirma, agrega el producto al carrito con la cantidad seleccionada.
+  // Si es invitado y quiere registrarse, lo redirige a login con mode=register.
+  onCheckoutConfirmed(result: { cantidad: number; wantsRegister: boolean }): void {
+    // Agrega el producto al carrito (CartService suma multiples llamadas por cantidad).
+    for (let i = 0; i < result.cantidad; i++) {
+      this.cartService.agregarAlCarrito(this.product);
     }
 
-    // Agrega el producto al carrito y navega directamente a el.
-    this.cartService.agregarAlCarrito(this.product);
-    this.router.navigate(['/carrito']);
+    // Cierra el modal
+    this.checkoutModalVisible.set(null);
+
+    if (result.wantsRegister) {
+      // Redirige a login en modo registro con opcion de volver a carrito.
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: '/carrito', mode: 'register' }
+      });
+    } else {
+      // Va directamente al carrito
+      this.router.navigate(['/carrito']);
+    }
+  }
+
+  // Cierra el modal sin confirmar
+  onCheckoutClosed(): void {
+    this.checkoutModalVisible.set(null);
   }
 }

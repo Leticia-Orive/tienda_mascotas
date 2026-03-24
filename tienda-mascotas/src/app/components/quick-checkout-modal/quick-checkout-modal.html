@@ -1,0 +1,82 @@
+@if (product) {
+  <div class="modal-overlay-checkout" (click)="cerrarPorFondo($event)">
+    <div class="modal-content-checkout">
+      <!-- Botón cerrar en esquina superior derecha -->
+      <button type="button" class="btn-close" (click)="cerrar()">✕</button>
+
+      <!-- Contenedor con dos columnas: imagen a la izquierda, detalles a la derecha -->
+      <div class="checkout-grid">
+        <!-- Columna izquierda: imagen del producto -->
+        <div class="checkout-image-column">
+          <img [src]="product.imagen" [alt]="product.nombre" class="product-image" />
+          <span class="category-badge">{{ product.categoria | uppercase }}</span>
+        </div>
+
+        <!-- Columna derecha: detalles y controles -->
+        <div class="checkout-details-column">
+          <h2 class="product-name">{{ product.nombre }}</h2>
+
+          <p class="product-description">{{ product.descripcion }}</p>
+
+          <!-- Precio y stock -->
+          <div class="price-stock-info">
+            <span class="price">{{ product.precio | currency: 'EUR' }}</span>
+            @if (product.stock < 5) {
+              <span class="stock-warning">Stock bajo: {{ product.stock }} unidades</span>
+            } @else {
+              <span class="stock-ok">Stock: {{ product.stock }} unidades</span>
+            }
+          </div>
+
+          <!-- Selector de cantidad -->
+          <div class="quantity-selector">
+            <label for="cantidad">Cantidad:</label>
+            <div class="quantity-controls">
+              <button type="button" class="btn-qty" (click)="decrementarCantidad()" [disabled]="cantidad <= 1">
+                −
+              </button>
+              <span class="qty-display">{{ cantidad }}</span>
+              <button type="button" class="btn-qty" (click)="incrementarCantidad()" [disabled]="cantidad >= product.stock">
+                +
+              </button>
+            </div>
+          </div>
+
+          <!-- Subtotal -->
+          <div class="subtotal-section">
+            <p class="subtotal-label">Subtotal:</p>
+            <p class="subtotal-amount">{{ subtotal | currency: 'EUR' }}</p>
+          </div>
+
+          <!-- Descuento si guest -->
+          @if (isGuest) {
+            <div class="discount-info">
+              <p class="discount-text">
+                ✓ Registrate y obtén <strong>10% de descuento</strong> en tus primeras 3 compras
+              </p>
+            </div>
+          }
+
+          <!-- Botones de acción -->
+          <div class="action-buttons">
+            @if (isGuest) {
+              <button type="button" class="btn btn-primary-register" (click)="confirmarCompra(true)">
+                Compra y Registrate (-10%)
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="confirmarCompra(false)">
+                Continuar como invitada
+              </button>
+            } @else {
+              <button type="button" class="btn btn-primary" (click)="confirmarCompra(false)">
+                Confirmar Compra
+              </button>
+            }
+            <button type="button" class="btn btn-cancel" (click)="cerrar()">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

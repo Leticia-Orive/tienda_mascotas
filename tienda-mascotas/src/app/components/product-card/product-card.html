@@ -46,3 +46,11 @@
     }
   </div>
 </div>
+
+<!-- Modal de compra directa/inmediata -->
+<app-quick-checkout-modal
+  [product]="checkoutModalVisible()"
+  [isGuest]="!authService.isLoggedIn()"
+  (confirmed)="onCheckoutConfirmed($event)"
+  (closed)="onCheckoutClosed()"
+></app-quick-checkout-modal>
