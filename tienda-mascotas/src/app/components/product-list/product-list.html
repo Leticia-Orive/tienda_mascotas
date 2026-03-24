@@ -45,3 +45,9 @@
 		</div>
 	}
 </section>
+
+<!-- Modal de detalle del producto -->
+<app-product-detail-modal
+	[product]="productolModaleVisible()"
+	(closed)="cerrarModal()"
+></app-product-detail-modal>

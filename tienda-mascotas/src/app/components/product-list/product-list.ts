@@ -3,15 +3,20 @@ import { isPlatformBrowser } from '@angular/common';
 import { PRODUCTS } from '../../data/products.data';
 import { Categoria, Product } from '../../models/product.model';
 import { ProductCard } from '../product-card/product-card';
+import { ProductDetailModal } from '../product-detail-modal/product-detail-modal';
 import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-product-list',
-  imports: [ProductCard],
+  imports: [ProductCard, ProductDetailModal],
   templateUrl: './product-list.html',
   styleUrl: './product-list.scss',
 })
 export class ProductList {
+  // Signal que controla si el modal de detalle esta abierto y cual producto se muestra.
+  // Null cuando el modal esta cerrado; contiene el producto cuando esta abierto.
+  productolModaleVisible = signal<Product | null>(null);
+
   // Clave usada en localStorage para guardar el catalogo modificado por el admin.
   // Esto permite que los cambios (anadir, editar, borrar) persistan al recargar la pagina.
   private readonly productStorageKey = 'petshop.products';
@@ -60,16 +65,20 @@ export class ProductList {
   }
 
   onSearch(event: Event): void {
-    // Guarda el texto del buscador para filtrar por nombre o descripcion.
-    this.searchTerm.set((event.target as HTMLInputElement).value);
+    // Actualiza el termino de busqueda al escribir en el campo de input.
+    const target = event.target as HTMLInputElement;
+    this.searchTerm.set(target.value);
   }
 
-  // Muestra en un alert el detalle completo del producto: nombre, descripcion, precio y stock.
+  // Abre el modal de detalle del producto.
   // Disponible tanto para admin como para clientes (boton "Ver producto" en la tarjeta).
   verProducto(product: Product): void {
-    window.alert(
-      `${product.nombre}\n\n${product.descripcion}\n\nPrecio: €${product.precio.toFixed(2)}\nStock: ${product.stock}`
-    );
+    this.productolModaleVisible.set(product);
+  }
+
+  // Cierra el modal al hacer clic en X o en el fondo.
+  cerrarModal(): void {
+    this.productolModaleVisible.set(null);
   }
 
   // Permite al admin modificar nombre, precio y stock de un producto existente.

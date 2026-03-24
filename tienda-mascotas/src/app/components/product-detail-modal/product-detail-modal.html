@@ -1,0 +1,45 @@
+@if (product) {
+  <div class="modal-overlay" (click)="cerrarPorFondo($event)">
+    <div class="modal-content">
+      <button type="button" class="modal-close" (click)="cerrar()" aria-label="Cerrar modal">
+        ✕
+      </button>
+
+      <div class="modal-body">
+        <div class="product-image-wrap">
+          <img [src]="product.imagen" [alt]="product.nombre" class="product-image" />
+          <span class="product-category">{{ product.categoria }}</span>
+        </div>
+
+        <div class="product-details">
+          <h2 class="product-title">{{ product.nombre }}</h2>
+
+          <p class="product-description">{{ product.descripcion }}</p>
+
+          <div class="product-meta">
+            <div class="meta-row">
+              <span class="meta-label">Precio</span>
+              <span class="meta-value">{{ product.precio | currency:'EUR':'symbol':'1.2-2':'es' }}</span>
+            </div>
+
+            <div class="meta-row">
+              <span class="meta-label">Stock disponible</span>
+              <span class="meta-value" [class.low-stock]="product.stock < 5">
+                {{ product.stock }} unidad(es)
+              </span>
+            </div>
+
+            <div class="meta-row">
+              <span class="meta-label">Categoria</span>
+              <span class="meta-value">{{ product.categoria }}</span>
+            </div>
+          </div>
+
+          <button type="button" class="modal-confirm" (click)="cerrar()">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

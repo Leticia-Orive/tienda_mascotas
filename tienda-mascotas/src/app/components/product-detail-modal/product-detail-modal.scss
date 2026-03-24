@@ -1,0 +1,194 @@
+// Fondo oscuro semitransparente que cubre toda la pantalla
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 1rem;
+  animation: fadeIn .2s ease-out;
+}
+
+// Caja blanca del modal con el contenido
+.modal-content {
+  position: relative;
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .25);
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: slideUp .25s ease-out;
+}
+
+// Boton X para cerrar el modal
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: .3rem;
+  border-radius: 50%;
+  transition: background .2s, color .2s;
+  z-index: 10;
+
+  &:hover {
+    background: var(--primary);
+    color: white;
+  }
+}
+
+// Contenedor del cuerpo del modal
+.modal-body {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1.2fr 1.8fr;
+  gap: 2rem;
+}
+
+// Imagen del producto en el modal
+.product-image-wrap {
+  position: relative;
+
+  .product-image {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    aspect-ratio: 4 / 5;
+  }
+
+  .product-category {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: var(--primary);
+    color: white;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: .3rem .75rem;
+    border-radius: 50px;
+    letter-spacing: .5px;
+  }
+}
+
+// Detalles del producto
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.product-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.product-description {
+  font-size: .95rem;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin: 0;
+}
+
+// Tabla de propiedades del producto
+.product-meta {
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+  padding: 1.2rem;
+  background: var(--bg);
+  border-radius: 12px;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meta-label {
+  font-weight: 700;
+  color: var(--text-light);
+  font-size: .95rem;
+}
+
+.meta-value {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--primary-dark);
+}
+
+.meta-value.low-stock {
+  color: #ef4444;
+}
+
+// Boton para cerrar el modal
+.modal-confirm {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: .9rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: .5rem;
+  transition: background .2s, transform .1s;
+  font-family: inherit;
+
+  &:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Animaciones
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive
+@media (max-width: 560px) {
+  .modal-body {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+
+  .modal-close {
+    top: .8rem;
+    right: .8rem;
+  }
+
+  .product-title {
+    font-size: 1.3rem;
+  }
+}
