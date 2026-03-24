@@ -9,7 +9,7 @@
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
   }
 }
 
@@ -25,7 +25,9 @@
     transition: transform .3s;
   }
 
-  &:hover .product-img { transform: scale(1.04); }
+  &:hover .product-img {
+    transform: scale(1.04);
+  }
 
   .product-category {
     position: absolute;
@@ -83,20 +85,85 @@
   color: var(--primary-dark);
 }
 
-.btn-add {
+.stock-info {
+  font-size: .8rem;
+  color: #15803d;
+  font-weight: 700;
+  background: #dcfce7;
+  padding: .2rem .6rem;
+  border-radius: 50px;
+}
+
+.stock-info.no-stock {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.actions-grid {
+  margin-top: .8rem;
+  display: grid;
+  gap: .45rem;
+}
+
+.admin-actions,
+.customer-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.action-btn {
+  border: 1px solid transparent;
+  padding: .5rem .7rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: .82rem;
+  cursor: pointer;
+  transition: transform .1s ease, box-shadow .2s ease;
+  font-family: inherit;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(15, 23, 42, .12);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+.action-btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-view {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.btn-edit {
+  background: #fff7ed;
+  color: #c2410c;
+  border-color: #fed7aa;
+}
+
+.btn-delete {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.btn-buy-now {
   background: var(--primary);
   color: white;
-  border: none;
-  padding: .45rem .9rem;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: .85rem;
-  cursor: pointer;
-  transition: background .2s, transform .1s;
-  font-family: inherit;
+  border-color: var(--primary);
+}
 
-  &:hover { background: var(--primary-dark); transform: scale(1.05); }
-  &:active { transform: scale(.97); }
+.btn-buy-now:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
 }
 
 .out-of-stock {
@@ -106,4 +173,11 @@
   padding: .3rem .7rem;
   background: #fef2f2;
   border-radius: 50px;
+}
+
+@media (max-width: 560px) {
+  .admin-actions,
+  .customer-actions {
+    grid-template-columns: 1fr;
+  }
 }

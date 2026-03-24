@@ -1,0 +1,42 @@
+<section class="admin-page">
+  <div class="admin-hero">
+    <p class="eyebrow">Panel administrador</p>
+    <h1>Control rapido de PetShop</h1>
+    <p>
+      Esta vista resume los usuarios registrados y confirma que la sesion actual tiene permisos de administracion.
+    </p>
+  </div>
+
+  <div class="admin-grid">
+    <article class="admin-card">
+      <span class="metric">{{ resumen.totalUsuarios }}</span>
+      <h2>Usuarios registrados</h2>
+      <p>Total de cuentas guardadas localmente en la aplicacion.</p>
+    </article>
+
+    <article class="admin-card">
+      <span class="metric">{{ resumen.totalAdmins }}</span>
+      <h2>Administradores</h2>
+      <p>Cuentas con acceso al panel y permisos especiales.</p>
+    </article>
+
+    <article class="admin-card">
+      <span class="metric">{{ resumen.totalClientes }}</span>
+      <h2>Clientes</h2>
+      <p>Usuarios normales que pueden comprar y gestionar su cuenta.</p>
+    </article>
+  </div>
+
+  <div class="admin-card admin-note">
+    <h2>Cuenta admin por defecto</h2>
+    <p>Correo: admin@petshop.com</p>
+    <p>Contrasena: admin123</p>
+  </div>
+
+  <div class="admin-card">
+    <h2>Gestion de productos</h2>
+    <p>Como administrador puedes ver, editar, borrar y comprar de forma inmediata.</p>
+  </div>
+
+  <app-product-list />
+</section>

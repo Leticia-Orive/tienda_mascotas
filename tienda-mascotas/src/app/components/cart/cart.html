@@ -28,6 +28,34 @@
 		</div>
 
 		<div class="cart-summary">
+			@if (!authService.isLoggedIn()) {
+				<div class="guest-offer">
+					<p>¿Aun no tienes cuenta? Registrate y recibe 10% de descuento en tus primeras 3 compras.</p>
+					<a routerLink="/login" [queryParams]="{ returnUrl: '/carrito', mode: 'register' }" class="register-offer-btn">
+						Registrarme y obtener 10%
+					</a>
+				</div>
+			}
+
+			@if (authService.isLoggedIn() && authService.currentUserRole() === 'customer') {
+				<div class="guest-offer">
+					@if (!descuentoCompletado) {
+						<p>Descuento activo: 10% de bienvenida en {{ authService.welcomeDiscountRemaining() }} compra(s) restante(s).</p>
+						<p class="discount-progress">{{ progresoDescuento }}</p>
+					} @else {
+						<p>Beneficio completado: ya usaste tus 3 compras con 10% de descuento.</p>
+						<p class="discount-progress">Compra 3 de 3 completada</p>
+					}
+					<div class="discount-progress-track" aria-hidden="true">
+						<div
+							class="discount-progress-fill"
+							[class.completed]="descuentoCompletado"
+							[style.width.%]="progresoDescuentoPorcentaje"
+						></div>
+					</div>
+				</div>
+			}
+
 			<div class="summary-row">
 				<span>Productos ({{ cartService.totalItems() }})</span>
 				<span>{{ cartService.totalPrice() | currency:'EUR':'symbol':'1.2-2':'es' }}</span>
@@ -36,9 +64,15 @@
 				<span>Envío</span>
 				<span class="free-shipping">GRATIS</span>
 			</div>
+			@if (discountAmount > 0) {
+				<div class="summary-row discount-row">
+					<span>Descuento bienvenida (10%)</span>
+					<span>-{{ discountAmount | currency:'EUR':'symbol':'1.2-2':'es' }}</span>
+				</div>
+			}
 			<div class="summary-row total">
 				<span>Total</span>
-				<strong>{{ cartService.totalPrice() | currency:'EUR':'symbol':'1.2-2':'es' }}</strong>
+				<strong>{{ totalConDescuento | currency:'EUR':'symbol':'1.2-2':'es' }}</strong>
 			</div>
 			<button class="btn-checkout" (click)="confirmarPedido()">✅ Finalizar compra</button>
 			<button class="btn-clear" (click)="cartService.vaciarCarrito()">Vaciar carrito</button>

@@ -1,0 +1,60 @@
+.admin-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.admin-hero {
+  background: linear-gradient(135deg, #1f7a4c, #49a96e);
+  color: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: .8rem;
+  font-weight: 800;
+  margin-bottom: .75rem;
+}
+
+.admin-hero h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: .75rem;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.admin-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.metric {
+  display: inline-block;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: .75rem;
+}
+
+.admin-card h2 {
+  margin-bottom: .5rem;
+}
+
+.admin-card p {
+  color: var(--text-light);
+}
+
+.admin-note {
+  background: #fff9e8;
+  border-color: #f5d06f;
+}

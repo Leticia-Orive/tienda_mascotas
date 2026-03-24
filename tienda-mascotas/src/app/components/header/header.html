@@ -8,11 +8,19 @@
     <nav class="main-nav">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
       <a routerLink="/catalogo" routerLinkActive="active">Catálogo</a>
+      @if (authService.isAdmin()) {
+        <a routerLink="/admin" routerLinkActive="active">Admin</a>
+      }
     </nav>
 
     <div class="header-actions">
       @if (authService.isLoggedIn()) {
-        <p class="user-email">{{ authService.currentUserEmail() }}</p>
+        <p class="user-email">
+          {{ authService.currentUserEmail() }}
+          @if (authService.isAdmin()) {
+            <span class="admin-badge">Admin</span>
+          }
+        </p>
 
         <button type="button" class="session-btn" (click)="onSesionClick($event)">
           <span class="session-icon">🔓</span>

@@ -8,13 +8,41 @@
     <p class="product-desc">{{ product.descripcion }}</p>
     <div class="product-footer">
       <span class="product-price">{{ product.precio | currency:'EUR':'symbol':'1.2-2':'es' }}</span>
-      @if (product.stock > 0) {
-        <button class="btn-add" (click)="agregar()">
-          🛒 Añadir
+      <span class="stock-info" [class.no-stock]="product.stock < 1">
+        Stock: {{ product.stock }}
+      </span>
+    </div>
+
+    @if (authService.isAdmin()) {
+      <div class="actions-grid admin-actions">
+        <button type="button" class="action-btn btn-view" (click)="verProducto()">Ver</button>
+        <button type="button" class="action-btn btn-edit" (click)="editarProducto()">Editar</button>
+        <button type="button" class="action-btn btn-delete" (click)="borrarProducto()">Borrar</button>
+        <button
+          type="button"
+          class="action-btn btn-buy-now"
+          (click)="compraInmediata()"
+          [disabled]="product.stock < 1"
+        >
+          Compra inmediata
         </button>
-      } @else {
+      </div>
+    } @else {
+      <div class="actions-grid customer-actions">
+        <button type="button" class="action-btn btn-view" (click)="verProducto()">Ver producto</button>
+        <button
+          type="button"
+          class="action-btn btn-buy-now"
+          (click)="compraInmediata()"
+          [disabled]="product.stock < 1"
+        >
+          Compra inmediata
+        </button>
+      </div>
+
+      @if (product.stock < 1) {
         <span class="out-of-stock">Sin stock</span>
       }
-    </div>
+    }
   </div>
 </div>

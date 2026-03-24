@@ -1,5 +1,13 @@
 <section class="product-list-section">
 	<div class="list-controls">
+		@if (authService.isAdmin()) {
+			<div class="admin-actions-row">
+				<button type="button" class="btn-add-product" (click)="anadirProducto()">
+					+ Anadir producto
+				</button>
+			</div>
+		}
+
 		<input
 			type="search"
 			class="search-input"
@@ -27,7 +35,12 @@
 	} @else {
 		<div class="products-grid">
 			@for (product of productosFiltrados(); track product.id) {
-				<app-product-card [product]="product" />
+				<app-product-card
+					[product]="product"
+					(viewRequested)="verProducto($event)"
+					(editRequested)="editarProducto($event)"
+					(deleteRequested)="borrarProducto($event)"
+				/>
 			}
 		</div>
 	}

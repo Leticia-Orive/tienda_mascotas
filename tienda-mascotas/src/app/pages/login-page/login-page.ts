@@ -27,6 +27,11 @@ export class LoginPage {
     // Mensajes contextuales mostrados despues de cerrar sesion o eliminar cuenta.
     this.mostrarMensajeCierre = this.route.snapshot.queryParamMap.get('logout') === '1';
     this.mostrarMensajeCuentaEliminada = this.route.snapshot.queryParamMap.get('deleted') === '1';
+
+    const modeParam = this.route.snapshot.queryParamMap.get('mode');
+    if (modeParam === 'register') {
+      this.modo = 'register';
+    }
   }
 
   // Alterna entre flujo de login y registro.
@@ -64,7 +69,7 @@ export class LoginPage {
         return;
       }
 
-      this.successMessage = 'Registro completado. Bienvenida a tu cuenta.';
+      this.successMessage = 'Registro completado. Tienes 10% de descuento en tus primeras 3 compras.';
       this.goToReturnUrl();
       return;
     }

@@ -111,6 +111,63 @@
   }
 }
 
+.guest-offer {
+  margin-bottom: .9rem;
+  padding: .9rem;
+  border-radius: 12px;
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+
+  p {
+    font-size: .9rem;
+    color: #14532d;
+    margin-bottom: .6rem;
+  }
+}
+
+.discount-progress {
+  margin: 0;
+  font-size: .82rem;
+  font-weight: 800;
+  color: #166534;
+  letter-spacing: .2px;
+}
+
+.discount-progress-track {
+  width: 100%;
+  height: 8px;
+  margin-top: .45rem;
+  border-radius: 999px;
+  background: #d1fae5;
+  overflow: hidden;
+}
+
+.discount-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  transition: width .25s ease;
+}
+
+.discount-progress-fill.completed {
+  background: linear-gradient(90deg, #f59e0b, #facc15);
+}
+
+.register-offer-btn {
+  display: inline-block;
+  padding: .45rem .75rem;
+  border-radius: 999px;
+  border: 1px solid #22c55e;
+  color: #166534;
+  font-weight: 700;
+  text-decoration: none;
+  background: #f0fdf4;
+}
+
+.discount-row {
+  color: #15803d;
+  font-weight: 700;
+}
+
 .btn-checkout {
   display: block;
   width: 100%;
