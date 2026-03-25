@@ -23,10 +23,16 @@ export class CartComponent {
 
   puntoRecogidaSeleccionado: PuntoRecogida | null = null;
   mostrarErrorRecogida = false;
+  direccionDomicilio = '';
+  mostrarErrorDireccion = false;
 
   seleccionarPuntoRecogida(punto: PuntoRecogida): void {
     this.puntoRecogidaSeleccionado = punto;
     this.mostrarErrorRecogida = false;
+    if (punto === 'tienda') {
+      this.direccionDomicilio = '';
+      this.mostrarErrorDireccion = false;
+    }
   }
 
   numeroTarjeta = '';
@@ -156,9 +162,14 @@ export class CartComponent {
       return;
     }
 
+    if (this.puntoRecogidaSeleccionado === 'domicilio' && !this.direccionDomicilio.trim()) {
+      this.mostrarErrorDireccion = true;
+      return;
+    }
+
     const descuentoActual = this.discountAmount;
 
-    this.cartService.registrarPedido(metodoPago, this.puntoRecogidaSeleccionado, descuentoActual);
+    this.cartService.registrarPedido(metodoPago, this.puntoRecogidaSeleccionado, this.direccionDomicilio, descuentoActual);
 
     // Si hay descuento activo, lo consume (resta 1 uso) antes de vaciar el carrito.
     // Informa al cliente cuantos usos le quedan o si ya los agoto todos.
@@ -185,5 +196,7 @@ export class CartComponent {
     this.mostrarErrorBizum = false;
     this.puntoRecogidaSeleccionado = null;
     this.mostrarErrorRecogida = false;
+    this.direccionDomicilio = '';
+    this.mostrarErrorDireccion = false;
   }
 }

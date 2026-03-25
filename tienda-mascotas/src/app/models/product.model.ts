@@ -30,6 +30,7 @@ export interface Pedido {
   fechaIso: string;
   metodoPago: MetodoPago;
   puntoRecogida: PuntoRecogida;
+  direccionDomicilio?: string;
   subtotal: number;
   descuento: number;
   totalFinal: number;

@@ -183,6 +183,25 @@
 				@if (mostrarErrorRecogida) {
 					<p class="payment-error">Selecciona un punto de recogida para continuar.</p>
 				}
+
+				@if (puntoRecogidaSeleccionado === 'domicilio') {
+					<div class="address-field">
+						<label for="direccionDomicilio" class="address-label">Direccion de envio</label>
+						<input
+							id="direccionDomicilio"
+							type="text"
+							class="address-input"
+							[class.error]="mostrarErrorDireccion"
+							placeholder="Ej: Calle Principal 123, Apt 4B, 28001 Madrid"
+							[(ngModel)]="direccionDomicilio"
+							(input)="mostrarErrorDireccion = false"
+							autocomplete="street-address"
+						/>
+						@if (mostrarErrorDireccion) {
+							<p class="address-error">Introduce una direccion valida para el envio.</p>
+						}
+					</div>
+				}
 			</div>
 
 			<button class="btn-checkout" (click)="confirmarPedido()">✅ Finalizar compra</button>

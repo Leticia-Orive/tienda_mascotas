@@ -65,7 +65,7 @@ export class CartService {
     this._items.set([]);
   }
 
-  registrarPedido(metodoPago: MetodoPago, puntoRecogida: PuntoRecogida, descuentoAplicado: number): void {
+  registrarPedido(metodoPago: MetodoPago, puntoRecogida: PuntoRecogida, direccionDomicilio: string, descuentoAplicado: number): void {
     const subtotal = this.totalPrice();
     const descuento = Math.max(0, descuentoAplicado);
     const totalFinal = Math.max(0, subtotal - descuento);
@@ -75,6 +75,7 @@ export class CartService {
       fechaIso: new Date().toISOString(),
       metodoPago,
       puntoRecogida,
+      ...(puntoRecogida === 'domicilio' && { direccionDomicilio }),
       subtotal,
       descuento,
       totalFinal,
