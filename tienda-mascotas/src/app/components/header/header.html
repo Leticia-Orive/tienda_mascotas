@@ -31,19 +31,20 @@
           Cerrar mi cuenta
         </button>
 
-        <a routerLink="/carrito" class="cart-btn">
-          <span class="cart-icon">🛒</span>
-          <span class="cart-label">Carrito</span>
-          @if (cartService.totalItems() > 0) {
-            <span class="cart-badge">{{ cartService.totalItems() }}</span>
-          }
-        </a>
       } @else {
         <a routerLink="/login" class="session-btn enter-btn">
           <span class="session-icon">🔐</span>
           <span>Entrar</span>
         </a>
       }
+
+      <a routerLink="/carrito" class="cart-btn" [class.has-items]="cartService.totalItems() > 0">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-label">Carrito</span>
+        @if (cartService.totalItems() > 0) {
+          <span class="cart-badge">{{ cartService.totalItems() }}</span>
+        }
+      </a>
     </div>
   </div>
 </header>

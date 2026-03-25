@@ -1,5 +1,6 @@
 import { PLATFORM_ID, Injectable, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { CartService } from './cart';
 
 interface AuthUser {
   email: string;
@@ -24,6 +25,7 @@ export class AuthService {
   private readonly defaultAdminPasswordHash = 'sha256:240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly cartService = inject(CartService);
   private _isLoggedIn = signal(false);
   private _currentUserEmail = signal<string | null>(null);
   private _currentUserRole = signal<'admin' | 'customer' | null>(null);
@@ -87,6 +89,7 @@ export class AuthService {
     this._currentUserEmail.set(existingUser.email);
     this._currentUserRole.set(existingUser.role);
     this._welcomeDiscountRemaining.set(this.getWelcomeDiscountRemaining(existingUser.email));
+    this.cartService.activarCarritoUsuario(existingUser.email);
     return { ok: true, message: 'Sesion iniciada.' };
   }
 
@@ -113,10 +116,17 @@ export class AuthService {
     this._currentUserEmail.set(normalizedEmail);
     this._currentUserRole.set('customer');
     this._welcomeDiscountRemaining.set(this.welcomeDiscountPurchases);
+    this.cartService.activarCarritoUsuario(normalizedEmail);
     return { ok: true, message: 'Usuario registrado correctamente.' };
   }
 
   cerrarSesion(): void {
+    if (this._currentUserEmail()) {
+      this.cartService.desactivarCarritoUsuario();
+    } else {
+      this.cartService.inicializarInvitado();
+    }
+
     this._isLoggedIn.set(false);
     this._currentUserEmail.set(null);
     this._currentUserRole.set(null);
@@ -169,6 +179,7 @@ export class AuthService {
 
     const filteredUsers = users.filter(user => user.email !== email);
     this.saveUsers(filteredUsers);
+    this.cartService.eliminarCarritoUsuario(email);
     this.cerrarSesion();
 
     return { ok: true, message: 'Tu cuenta fue eliminada.' };

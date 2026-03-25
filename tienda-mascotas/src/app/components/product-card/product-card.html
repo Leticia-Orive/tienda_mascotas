@@ -20,6 +20,15 @@
         <button type="button" class="action-btn btn-delete" (click)="borrarProducto()">Borrar</button>
         <button
           type="button"
+          class="action-btn btn-add-cart"
+          [class.added]="anadidoAlCarrito()"
+          (click)="agregar()"
+          [disabled]="product.stock < 1"
+        >
+          {{ anadidoAlCarrito() ? '✓ Añadido' : 'Añadir al carrito' }}
+        </button>
+        <button
+          type="button"
           class="action-btn btn-buy-now"
           (click)="compraInmediata()"
           [disabled]="product.stock < 1"
@@ -30,6 +39,15 @@
     } @else {
       <div class="actions-grid customer-actions">
         <button type="button" class="action-btn btn-view" (click)="verProducto()">Ver producto</button>
+        <button
+          type="button"
+          class="action-btn btn-add-cart"
+          [class.added]="anadidoAlCarrito()"
+          (click)="agregar()"
+          [disabled]="product.stock < 1"
+        >
+          {{ anadidoAlCarrito() ? '✓ Añadido' : 'Añadir al carrito' }}
+        </button>
         <button
           type="button"
           class="action-btn btn-buy-now"

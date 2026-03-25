@@ -32,9 +32,20 @@ export class ProductCard {
   authService = inject(AuthService);
   router = inject(Router);
 
+  // Signal que indica si el producto acaba de ser añadido (para mostrar feedback visual).
+  anadidoAlCarrito = signal(false);
+
   agregar(): void {
+    if (this.product.stock < 1) {
+      return;
+    }
+
     // Envia el producto al servicio para sumarlo al carrito.
     this.cartService.agregarAlCarrito(this.product);
+
+    // Muestra brevemente "✓ Añadido" en el botón y restaura el texto original.
+    this.anadidoAlCarrito.set(true);
+    setTimeout(() => this.anadidoAlCarrito.set(false), 1500);
   }
 
   // Notifica al padre que se quiere ver el detalle de este producto.

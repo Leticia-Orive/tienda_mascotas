@@ -5,11 +5,14 @@ import { CartItem, MetodoPago, Pedido, PuntoRecogida, Product } from '../models/
   providedIn: 'root'
 })
 export class CartService {
-  private readonly pedidosStorageKey = 'petshop_pedidos';
+  private readonly pedidosStorageKeyPrefix = 'petshop.pedidos';
+  private readonly cartStorageKeyPrefix = 'petshop.cart';
+  private activeCartOwnerEmail: string | null = null;
+  private activePedidosOwnerEmail: string | null = null;
 
   // Signal interno con los items actuales del carrito.
   private _items = signal<CartItem[]>([]);
-  private _pedidos = signal<Pedido[]>(this.cargarPedidos());
+  private _pedidos = signal<Pedido[]>([]);
 
   // Exponemos el carrito en modo solo lectura para no mutarlo fuera del servicio.
   readonly items = this._items.asReadonly();
@@ -41,10 +44,13 @@ export class CartService {
       // Si no existe, lo agrega con cantidad inicial 1.
       this._items.set([...items, { product, cantidad: 1 }]);
     }
+
+    this.persistirCarritoActivo();
   }
 
   eliminarDelCarrito(productId: number): void {
     this._items.set(this._items().filter(i => i.product.id !== productId));
+    this.persistirCarritoActivo();
   }
 
   actualizarCantidad(productId: number, cantidad: number): void {
@@ -58,14 +64,68 @@ export class CartService {
         i.product.id === productId ? { ...i, cantidad } : i
       )
     );
+
+    this.persistirCarritoActivo();
   }
 
   vaciarCarrito(): void {
     // Reinicia el carrito despues de la compra o por accion del usuario.
     this._items.set([]);
+    this.persistirCarritoActivo();
+  }
+
+  activarCarritoUsuario(email: string): void {
+    this.activeCartOwnerEmail = email;
+    this.activePedidosOwnerEmail = email;
+    this._items.set(this.cargarCarritoUsuario(email));
+    this._pedidos.set(this.cargarPedidosUsuario(email));
+  }
+
+  desactivarCarritoUsuario(): void {
+    this.persistirCarritoActivo();
+    this.activeCartOwnerEmail = null;
+    this.activePedidosOwnerEmail = null;
+    this._items.set([]);
+    this._pedidos.set([]);
+  }
+
+  inicializarInvitado(): void {
+    this.activeCartOwnerEmail = null;
+    this.activePedidosOwnerEmail = null;
+    this._items.set([]);
+    this._pedidos.set([]);
+  }
+
+  eliminarCarritoUsuario(email: string): void {
+    try {
+      localStorage.removeItem(this.getCartStorageKey(email));
+    } catch {
+      // Si localStorage falla, no debe bloquear la app.
+    }
+
+    if (this.activeCartOwnerEmail === email) {
+      this.activeCartOwnerEmail = null;
+      this._items.set([]);
+    }
+
+    try {
+      localStorage.removeItem(this.getPedidosStorageKey(email));
+    } catch {
+      // Si localStorage falla, no debe bloquear la app.
+    }
+
+    if (this.activePedidosOwnerEmail === email) {
+      this.activePedidosOwnerEmail = null;
+      this._pedidos.set([]);
+    }
   }
 
   registrarPedido(metodoPago: MetodoPago, puntoRecogida: PuntoRecogida, direccionDomicilio: string, descuentoAplicado: number): void {
+    if (!this.activePedidosOwnerEmail) {
+      this._items.set([]);
+      return;
+    }
+
     const subtotal = this.totalPrice();
     const descuento = Math.max(0, descuentoAplicado);
     const totalFinal = Math.max(0, subtotal - descuento);
@@ -91,9 +151,9 @@ export class CartService {
     this.guardarPedidos();
   }
 
-  private cargarPedidos(): Pedido[] {
+  private cargarPedidosUsuario(email: string): Pedido[] {
     try {
-      const raw = localStorage.getItem(this.pedidosStorageKey);
+      const raw = localStorage.getItem(this.getPedidosStorageKey(email));
       if (!raw) {
         return [];
       }
@@ -106,11 +166,49 @@ export class CartService {
   }
 
   private guardarPedidos(): void {
+    if (!this.activePedidosOwnerEmail) {
+      return;
+    }
+
     try {
-      localStorage.setItem(this.pedidosStorageKey, JSON.stringify(this._pedidos()));
+      localStorage.setItem(this.getPedidosStorageKey(this.activePedidosOwnerEmail), JSON.stringify(this._pedidos()));
     } catch {
       // Si localStorage falla, el flujo de compra no debe romperse.
     }
+  }
+
+  private cargarCarritoUsuario(email: string): CartItem[] {
+    try {
+      const raw = localStorage.getItem(this.getCartStorageKey(email));
+      if (!raw) {
+        return [];
+      }
+
+      const parsed = JSON.parse(raw) as CartItem[];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  private persistirCarritoActivo(): void {
+    if (!this.activeCartOwnerEmail) {
+      return;
+    }
+
+    try {
+      localStorage.setItem(this.getCartStorageKey(this.activeCartOwnerEmail), JSON.stringify(this._items()));
+    } catch {
+      // Si localStorage falla, no debe bloquear la app.
+    }
+  }
+
+  private getCartStorageKey(email: string): string {
+    return `${this.cartStorageKeyPrefix}.${email}`;
+  }
+
+  private getPedidosStorageKey(email: string): string {
+    return `${this.pedidosStorageKeyPrefix}.${email}`;
   }
 }
 

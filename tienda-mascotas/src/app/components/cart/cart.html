@@ -207,7 +207,7 @@
 			<button class="btn-checkout" (click)="confirmarPedido()">✅ Finalizar compra</button>
 			<button class="btn-clear" (click)="cartService.vaciarCarrito()">Vaciar carrito</button>
 
-			@if (cartService.pedidos().length > 0) {
+			@if (authService.isLoggedIn() && cartService.pedidos().length > 0) {
 				<div class="order-history">
 					<h3 class="order-history-title">Historial de pedidos</h3>
 					@for (pedido of cartService.pedidos().slice(0, 5); track pedido.id) {
