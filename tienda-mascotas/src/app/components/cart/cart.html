@@ -160,6 +160,31 @@
 				}
 			</div>
 
+			<div class="payment-methods">
+				<p class="payment-title">Punto de recogida</p>
+				<div class="payment-options" role="radiogroup" aria-label="Seleccionar punto de recogida">
+					<button
+						type="button"
+						class="payment-option"
+						[class.selected]="puntoRecogidaSeleccionado === 'tienda'"
+						(click)="seleccionarPuntoRecogida('tienda')"
+					>
+						🏪 En tienda
+					</button>
+					<button
+						type="button"
+						class="payment-option"
+						[class.selected]="puntoRecogidaSeleccionado === 'domicilio'"
+						(click)="seleccionarPuntoRecogida('domicilio')"
+					>
+						🏠 A domicilio
+					</button>
+				</div>
+				@if (mostrarErrorRecogida) {
+					<p class="payment-error">Selecciona un punto de recogida para continuar.</p>
+				}
+			</div>
+
 			<button class="btn-checkout" (click)="confirmarPedido()">✅ Finalizar compra</button>
 			<button class="btn-clear" (click)="cartService.vaciarCarrito()">Vaciar carrito</button>
 

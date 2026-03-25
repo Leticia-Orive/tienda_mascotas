@@ -16,6 +16,7 @@ export interface CartItem {
 }
 
 export type MetodoPago = 'tarjeta' | 'bizum' | 'efectivo';
+export type PuntoRecogida = 'tienda' | 'domicilio';
 
 export interface PedidoItem {
   productId: number;
@@ -28,6 +29,7 @@ export interface Pedido {
   id: string;
   fechaIso: string;
   metodoPago: MetodoPago;
+  puntoRecogida: PuntoRecogida;
   subtotal: number;
   descuento: number;
   totalFinal: number;

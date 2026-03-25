@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../services/cart';
 import { AuthService } from '../../services/auth';
-import { MetodoPago } from '../../models/product.model';
+import { MetodoPago, PuntoRecogida } from '../../models/product.model';
 
 @Component({
   selector: 'app-cart',
@@ -20,6 +20,14 @@ export class CartComponent {
 
   metodoPagoSeleccionado: MetodoPago | null = null;
   mostrarErrorMetodoPago = false;
+
+  puntoRecogidaSeleccionado: PuntoRecogida | null = null;
+  mostrarErrorRecogida = false;
+
+  seleccionarPuntoRecogida(punto: PuntoRecogida): void {
+    this.puntoRecogidaSeleccionado = punto;
+    this.mostrarErrorRecogida = false;
+  }
 
   numeroTarjeta = '';
   mostrarErrorTarjeta = false;
@@ -143,9 +151,14 @@ export class CartComponent {
       return;
     }
 
+    if (!this.puntoRecogidaSeleccionado) {
+      this.mostrarErrorRecogida = true;
+      return;
+    }
+
     const descuentoActual = this.discountAmount;
 
-    this.cartService.registrarPedido(metodoPago, descuentoActual);
+    this.cartService.registrarPedido(metodoPago, this.puntoRecogidaSeleccionado, descuentoActual);
 
     // Si hay descuento activo, lo consume (resta 1 uso) antes de vaciar el carrito.
     // Informa al cliente cuantos usos le quedan o si ya los agoto todos.
@@ -155,9 +168,11 @@ export class CartComponent {
       const detalle = restantes > 0
         ? `Te quedan ${restantes} compra(s) con 10% de descuento.`
         : 'Ya usaste todo tu descuento de bienvenida.';
-      alert(`✅ ¡Pedido confirmado! Metodo de pago: ${metodoPago}. Se aplicó tu 10% de bienvenida. ${detalle} Gracias por tu compra en PetShop 🐾`);
+      const recogidaTexto = this.puntoRecogidaSeleccionado === 'tienda' ? 'recogida en tienda' : 'entrega a domicilio';
+      alert(`✅ ¡Pedido confirmado! Metodo de pago: ${metodoPago}. Envio: ${recogidaTexto}. Se aplicó tu 10% de bienvenida. ${detalle} Gracias por tu compra en PetShop 🐾`);
     } else {
-      alert(`✅ ¡Pedido confirmado! Metodo de pago: ${metodoPago}. Gracias por tu compra en PetShop 🐾`);
+      const recogidaTexto = this.puntoRecogidaSeleccionado === 'tienda' ? 'recogida en tienda' : 'entrega a domicilio';
+      alert(`✅ ¡Pedido confirmado! Metodo de pago: ${metodoPago}. Envio: ${recogidaTexto}. Gracias por tu compra en PetShop 🐾`);
     }
 
     this.cartService.vaciarCarrito();
@@ -168,5 +183,7 @@ export class CartComponent {
     this.telefonoBizum = '';
     this.prefijoBizum = '+34';
     this.mostrarErrorBizum = false;
+    this.puntoRecogidaSeleccionado = null;
+    this.mostrarErrorRecogida = false;
   }
 }

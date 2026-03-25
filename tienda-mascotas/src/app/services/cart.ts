@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { CartItem, MetodoPago, Pedido, Product } from '../models/product.model';
+import { CartItem, MetodoPago, Pedido, PuntoRecogida, Product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +65,7 @@ export class CartService {
     this._items.set([]);
   }
 
-  registrarPedido(metodoPago: MetodoPago, descuentoAplicado: number): void {
+  registrarPedido(metodoPago: MetodoPago, puntoRecogida: PuntoRecogida, descuentoAplicado: number): void {
     const subtotal = this.totalPrice();
     const descuento = Math.max(0, descuentoAplicado);
     const totalFinal = Math.max(0, subtotal - descuento);
@@ -74,6 +74,7 @@ export class CartService {
       id: `PED-${Date.now()}`,
       fechaIso: new Date().toISOString(),
       metodoPago,
+      puntoRecogida,
       subtotal,
       descuento,
       totalFinal,
