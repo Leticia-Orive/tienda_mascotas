@@ -106,6 +106,27 @@
 				@if (mostrarErrorMetodoPago) {
 					<p class="payment-error">Selecciona un metodo de pago para continuar.</p>
 				}
+
+				@if (metodoPagoSeleccionado === 'tarjeta') {
+					<div class="card-number-field">
+						<label for="numeroTarjeta" class="card-number-label">Numero de tarjeta</label>
+						<input
+							id="numeroTarjeta"
+							type="text"
+							class="card-number-input"
+							[class.error]="mostrarErrorTarjeta"
+							placeholder="1234 5678 9012 3456"
+							maxlength="19"
+							[value]="numeroTarjeta"
+							(input)="onNumeroTarjetaInput($event)"
+							autocomplete="cc-number"
+							inputmode="numeric"
+						/>
+						@if (mostrarErrorTarjeta) {
+							<p class="card-number-error">Introduce un numero de tarjeta valido (16 digitos).</p>
+						}
+					</div>
+				}
 			</div>
 
 			<button class="btn-checkout" (click)="confirmarPedido()">✅ Finalizar compra</button>

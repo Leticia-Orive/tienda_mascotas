@@ -217,6 +217,48 @@
   font-weight: 700;
 }
 
+.card-number-field {
+  margin-top: .65rem;
+}
+
+.card-number-label {
+  display: block;
+  font-size: .85rem;
+  font-weight: 800;
+  color: #14532d;
+  margin-bottom: .35rem;
+}
+
+.card-number-input {
+  width: 100%;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: .55rem .75rem;
+  font-size: .95rem;
+  font-family: inherit;
+  letter-spacing: .12em;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color .2s, box-shadow .2s;
+
+  &:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px #bbf7d040;
+  }
+
+  &.error {
+    border-color: #b91c1c;
+    box-shadow: 0 0 0 3px #fca5a540;
+  }
+}
+
+.card-number-error {
+  margin: .35rem 0 0;
+  font-size: .82rem;
+  color: #b91c1c;
+  font-weight: 700;
+}
+
 .btn-checkout {
   display: block;
   width: 100%;

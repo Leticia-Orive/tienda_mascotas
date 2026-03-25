@@ -20,6 +20,22 @@ export class CartComponent {
   metodoPagoSeleccionado: MetodoPago | null = null;
   mostrarErrorMetodoPago = false;
 
+  numeroTarjeta = '';
+  mostrarErrorTarjeta = false;
+
+  get numeroTarjetaLimpio(): string {
+    return this.numeroTarjeta.replace(/\s/g, '');
+  }
+
+  onNumeroTarjetaInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '').slice(0, 16);
+    value = value.replace(/(.{4})/g, '$1 ').trim();
+    this.numeroTarjeta = value;
+    input.value = value;
+    this.mostrarErrorTarjeta = false;
+  }
+
   // Calcula el importe que se descuenta al cliente nuevo (10% del total bruto).
   // Si el cliente no tiene descuento activo, devuelve 0.
   get discountAmount(): number {
@@ -61,6 +77,10 @@ export class CartComponent {
   seleccionarMetodoPago(metodo: MetodoPago): void {
     this.metodoPagoSeleccionado = metodo;
     this.mostrarErrorMetodoPago = false;
+    if (metodo !== 'tarjeta') {
+      this.numeroTarjeta = '';
+      this.mostrarErrorTarjeta = false;
+    }
   }
 
   confirmarPedido(): void {
@@ -70,6 +90,12 @@ export class CartComponent {
     }
 
     const metodoPago = this.metodoPagoSeleccionado;
+
+    if (metodoPago === 'tarjeta' && this.numeroTarjetaLimpio.length !== 16) {
+      this.mostrarErrorTarjeta = true;
+      return;
+    }
+
     const descuentoActual = this.discountAmount;
 
     this.cartService.registrarPedido(metodoPago, descuentoActual);
@@ -90,5 +116,7 @@ export class CartComponent {
     this.cartService.vaciarCarrito();
     this.metodoPagoSeleccionado = null;
     this.mostrarErrorMetodoPago = false;
+    this.numeroTarjeta = '';
+    this.mostrarErrorTarjeta = false;
   }
 }
