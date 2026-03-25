@@ -107,6 +107,37 @@
 					<p class="payment-error">Selecciona un metodo de pago para continuar.</p>
 				}
 
+				@if (metodoPagoSeleccionado === 'bizum') {
+					<div class="card-number-field">
+						<label class="card-number-label">Telefono Bizum</label>
+						<div class="bizum-phone-row" [class.error]="mostrarErrorBizum">
+							<select
+								class="bizum-prefix-select"
+								[(ngModel)]="prefijoBizum"
+								aria-label="Prefijo pais"
+							>
+								@for (p of prefijos; track p.codigo) {
+									<option [value]="p.codigo">{{ p.pais }}</option>
+								}
+							</select>
+							<input
+								id="telefonoBizum"
+								type="tel"
+								class="bizum-phone-input"
+								placeholder="612345678"
+								maxlength="15"
+								[value]="telefonoBizum"
+								(input)="onTelefonoBizumInput($event)"
+								autocomplete="tel-national"
+								inputmode="numeric"
+							/>
+						</div>
+						@if (mostrarErrorBizum) {
+							<p class="card-number-error">Introduce un numero de telefono valido (entre 4 y 15 digitos).</p>
+						}
+					</div>
+				}
+
 				@if (metodoPagoSeleccionado === 'tarjeta') {
 					<div class="card-number-field">
 						<label for="numeroTarjeta" class="card-number-label">Numero de tarjeta</label>

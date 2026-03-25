@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../services/cart';
 import { AuthService } from '../../services/auth';
@@ -7,7 +8,7 @@ import { MetodoPago } from '../../models/product.model';
 
 @Component({
   selector: 'app-cart',
-  imports: [CurrencyPipe, DatePipe, TitleCasePipe, RouterLink],
+  imports: [CurrencyPipe, DatePipe, TitleCasePipe, RouterLink, FormsModule],
   templateUrl: './cart.html',
   styleUrl: './cart.scss',
 })
@@ -22,6 +23,42 @@ export class CartComponent {
 
   numeroTarjeta = '';
   mostrarErrorTarjeta = false;
+
+  telefonoBizum = '';
+  prefijoBizum = '+34';
+  mostrarErrorBizum = false;
+
+  readonly prefijos = [
+    { codigo: '+34',  pais: 'España (+34)' },
+    { codigo: '+351', pais: 'Portugal (+351)' },
+    { codigo: '+33',  pais: 'Francia (+33)' },
+    { codigo: '+49',  pais: 'Alemania (+49)' },
+    { codigo: '+39',  pais: 'Italia (+39)' },
+    { codigo: '+44',  pais: 'Reino Unido (+44)' },
+    { codigo: '+32',  pais: 'Bélgica (+32)' },
+    { codigo: '+31',  pais: 'Países Bajos (+31)' },
+    { codigo: '+41',  pais: 'Suiza (+41)' },
+    { codigo: '+43',  pais: 'Austria (+43)' },
+    { codigo: '+352', pais: 'Luxemburgo (+352)' },
+    { codigo: '+212', pais: 'Marruecos (+212)' },
+    { codigo: '+1',   pais: 'EEUU / Canadá (+1)' },
+    { codigo: '+52',  pais: 'México (+52)' },
+    { codigo: '+54',  pais: 'Argentina (+54)' },
+    { codigo: '+57',  pais: 'Colombia (+57)' },
+    { codigo: '+56',  pais: 'Chile (+56)' },
+  ];
+
+  get telefonoBizumLimpio(): string {
+    return this.telefonoBizum.replace(/\s/g, '');
+  }
+
+  onTelefonoBizumInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.replace(/\D/g, '').slice(0, 15);
+    this.telefonoBizum = value;
+    input.value = value;
+    this.mostrarErrorBizum = false;
+  }
 
   get numeroTarjetaLimpio(): string {
     return this.numeroTarjeta.replace(/\s/g, '');
@@ -81,6 +118,11 @@ export class CartComponent {
       this.numeroTarjeta = '';
       this.mostrarErrorTarjeta = false;
     }
+    if (metodo !== 'bizum') {
+      this.telefonoBizum = '';
+      this.prefijoBizum = '+34';
+      this.mostrarErrorBizum = false;
+    }
   }
 
   confirmarPedido(): void {
@@ -93,6 +135,11 @@ export class CartComponent {
 
     if (metodoPago === 'tarjeta' && this.numeroTarjetaLimpio.length !== 16) {
       this.mostrarErrorTarjeta = true;
+      return;
+    }
+
+    if (metodoPago === 'bizum' && !/^\d{4,15}$/.test(this.telefonoBizumLimpio)) {
+      this.mostrarErrorBizum = true;
       return;
     }
 
@@ -118,5 +165,8 @@ export class CartComponent {
     this.mostrarErrorMetodoPago = false;
     this.numeroTarjeta = '';
     this.mostrarErrorTarjeta = false;
+    this.telefonoBizum = '';
+    this.prefijoBizum = '+34';
+    this.mostrarErrorBizum = false;
   }
 }
