@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../services/cart';
 import { AuthService } from '../../services/auth';
+import { MetodoPago } from '../../models/product.model';
 
 @Component({
   selector: 'app-cart',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe, DatePipe, TitleCasePipe, RouterLink],
   templateUrl: './cart.html',
   styleUrl: './cart.scss',
 })
@@ -15,6 +16,9 @@ export class CartComponent {
   // authService se usa para saber si el cliente tiene descuento de bienvenida activo
   // y para consumir un uso del descuento al confirmar la compra.
   authService = inject(AuthService);
+
+  metodoPagoSeleccionado: MetodoPago | null = null;
+  mostrarErrorMetodoPago = false;
 
   // Calcula el importe que se descuenta al cliente nuevo (10% del total bruto).
   // Si el cliente no tiene descuento activo, devuelve 0.
@@ -54,20 +58,37 @@ export class CartComponent {
     return this.authService.currentUserRole() === 'customer' && this.authService.welcomeDiscountRemaining() === 0;
   }
 
+  seleccionarMetodoPago(metodo: MetodoPago): void {
+    this.metodoPagoSeleccionado = metodo;
+    this.mostrarErrorMetodoPago = false;
+  }
+
   confirmarPedido(): void {
+    if (!this.metodoPagoSeleccionado) {
+      this.mostrarErrorMetodoPago = true;
+      return;
+    }
+
+    const metodoPago = this.metodoPagoSeleccionado;
+    const descuentoActual = this.discountAmount;
+
+    this.cartService.registrarPedido(metodoPago, descuentoActual);
+
     // Si hay descuento activo, lo consume (resta 1 uso) antes de vaciar el carrito.
     // Informa al cliente cuantos usos le quedan o si ya los agoto todos.
-    if (this.discountAmount > 0) {
+    if (descuentoActual > 0) {
       this.authService.consumirDescuentoBienvenida();
       const restantes = this.authService.welcomeDiscountRemaining();
       const detalle = restantes > 0
         ? `Te quedan ${restantes} compra(s) con 10% de descuento.`
         : 'Ya usaste todo tu descuento de bienvenida.';
-      alert(`✅ ¡Pedido confirmado! Se aplicó tu 10% de bienvenida. ${detalle} Gracias por tu compra en PetShop 🐾`);
+      alert(`✅ ¡Pedido confirmado! Metodo de pago: ${metodoPago}. Se aplicó tu 10% de bienvenida. ${detalle} Gracias por tu compra en PetShop 🐾`);
     } else {
-      alert('✅ ¡Pedido confirmado! Gracias por tu compra en PetShop 🐾');
+      alert(`✅ ¡Pedido confirmado! Metodo de pago: ${metodoPago}. Gracias por tu compra en PetShop 🐾`);
     }
 
     this.cartService.vaciarCarrito();
+    this.metodoPagoSeleccionado = null;
+    this.mostrarErrorMetodoPago = false;
   }
 }

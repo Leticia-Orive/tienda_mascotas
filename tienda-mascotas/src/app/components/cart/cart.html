@@ -74,8 +74,60 @@
 				<span>Total</span>
 				<strong>{{ totalConDescuento | currency:'EUR':'symbol':'1.2-2':'es' }}</strong>
 			</div>
+
+			<div class="payment-methods">
+				<p class="payment-title">Metodo de pago</p>
+				<div class="payment-options" role="radiogroup" aria-label="Seleccionar metodo de pago">
+					<button
+						type="button"
+						class="payment-option"
+						[class.selected]="metodoPagoSeleccionado === 'tarjeta'"
+						(click)="seleccionarMetodoPago('tarjeta')"
+					>
+						Tarjeta
+					</button>
+					<button
+						type="button"
+						class="payment-option"
+						[class.selected]="metodoPagoSeleccionado === 'bizum'"
+						(click)="seleccionarMetodoPago('bizum')"
+					>
+						Bizum
+					</button>
+					<button
+						type="button"
+						class="payment-option"
+						[class.selected]="metodoPagoSeleccionado === 'efectivo'"
+						(click)="seleccionarMetodoPago('efectivo')"
+					>
+						Efectivo
+					</button>
+				</div>
+				@if (mostrarErrorMetodoPago) {
+					<p class="payment-error">Selecciona un metodo de pago para continuar.</p>
+				}
+			</div>
+
 			<button class="btn-checkout" (click)="confirmarPedido()">✅ Finalizar compra</button>
 			<button class="btn-clear" (click)="cartService.vaciarCarrito()">Vaciar carrito</button>
+
+			@if (cartService.pedidos().length > 0) {
+				<div class="order-history">
+					<h3 class="order-history-title">Historial de pedidos</h3>
+					@for (pedido of cartService.pedidos().slice(0, 5); track pedido.id) {
+						<div class="order-history-item">
+							<div class="order-history-row">
+								<span class="order-id">{{ pedido.id }}</span>
+								<span class="order-date">{{ pedido.fechaIso | date:'short':'':'es' }}</span>
+							</div>
+							<div class="order-history-row">
+								<span>Pago: {{ pedido.metodoPago | titlecase }}</span>
+								<strong>{{ pedido.totalFinal | currency:'EUR':'symbol':'1.2-2':'es' }}</strong>
+							</div>
+						</div>
+					}
+				</div>
+			}
 		</div>
 	}
 </section>

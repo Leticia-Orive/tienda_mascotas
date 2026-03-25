@@ -1,15 +1,19 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { CartItem, Product } from '../models/product.model';
+import { CartItem, MetodoPago, Pedido, Product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
+  private readonly pedidosStorageKey = 'petshop_pedidos';
+
   // Signal interno con los items actuales del carrito.
   private _items = signal<CartItem[]>([]);
+  private _pedidos = signal<Pedido[]>(this.cargarPedidos());
 
   // Exponemos el carrito en modo solo lectura para no mutarlo fuera del servicio.
   readonly items = this._items.asReadonly();
+  readonly pedidos = this._pedidos.asReadonly();
 
   // Cantidad total de productos (sumando unidades repetidas).
   readonly totalItems = computed(() =>
@@ -59,6 +63,52 @@ export class CartService {
   vaciarCarrito(): void {
     // Reinicia el carrito despues de la compra o por accion del usuario.
     this._items.set([]);
+  }
+
+  registrarPedido(metodoPago: MetodoPago, descuentoAplicado: number): void {
+    const subtotal = this.totalPrice();
+    const descuento = Math.max(0, descuentoAplicado);
+    const totalFinal = Math.max(0, subtotal - descuento);
+
+    const nuevoPedido: Pedido = {
+      id: `PED-${Date.now()}`,
+      fechaIso: new Date().toISOString(),
+      metodoPago,
+      subtotal,
+      descuento,
+      totalFinal,
+      items: this._items().map(item => ({
+        productId: item.product.id,
+        nombre: item.product.nombre,
+        precioUnitario: item.product.precio,
+        cantidad: item.cantidad,
+      })),
+    };
+
+    this._pedidos.set([nuevoPedido, ...this._pedidos()]);
+    this.guardarPedidos();
+  }
+
+  private cargarPedidos(): Pedido[] {
+    try {
+      const raw = localStorage.getItem(this.pedidosStorageKey);
+      if (!raw) {
+        return [];
+      }
+
+      const parsed = JSON.parse(raw) as Pedido[];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  private guardarPedidos(): void {
+    try {
+      localStorage.setItem(this.pedidosStorageKey, JSON.stringify(this._pedidos()));
+    } catch {
+      // Si localStorage falla, el flujo de compra no debe romperse.
+    }
   }
 }
 

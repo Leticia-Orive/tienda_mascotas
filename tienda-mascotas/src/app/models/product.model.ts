@@ -14,3 +14,22 @@ export interface CartItem {
   product: Product;
   cantidad: number;
 }
+
+export type MetodoPago = 'tarjeta' | 'bizum' | 'efectivo';
+
+export interface PedidoItem {
+  productId: number;
+  nombre: string;
+  precioUnitario: number;
+  cantidad: number;
+}
+
+export interface Pedido {
+  id: string;
+  fechaIso: string;
+  metodoPago: MetodoPago;
+  subtotal: number;
+  descuento: number;
+  totalFinal: number;
+  items: PedidoItem[];
+}
