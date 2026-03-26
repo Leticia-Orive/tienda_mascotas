@@ -135,6 +135,24 @@
   color: #ef4444;
 }
 
+.meta-value.agotado {
+  color: #991b1b;
+  background: #fee2e2;
+  padding: .5rem .75rem;
+  border-radius: 6px;
+  border: 2px solid #fecaca;
+  animation: pulse-warning 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
 // Boton para cerrar el modal
 .modal-confirm {
   background: var(--primary);

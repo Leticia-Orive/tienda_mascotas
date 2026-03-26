@@ -8,9 +8,13 @@
     <p class="product-desc">{{ product.descripcion }}</p>
     <div class="product-footer">
       <span class="product-price">{{ product.precio | currency:'EUR':'symbol':'1.2-2':'es' }}</span>
-      <span class="stock-info" [class.no-stock]="product.stock < 1">
-        Stock: {{ product.stock }}
-      </span>
+      @if (product.stock < 1) {
+        <span class="stock-info agotado">⚠️ AGOTADO</span>
+      } @else {
+        <span class="stock-info available">
+          Stock: {{ product.stock }}
+        </span>
+      }
     </div>
 
     @if (authService.isAdmin()) {
@@ -58,9 +62,10 @@
         </button>
       </div>
 
-      @if (product.stock < 1) {
-        <span class="out-of-stock">Sin stock</span>
-      }
+    }
+
+    @if (product.stock < 1) {
+      <span class="out-of-stock">⚠️ Producto agotado - El admin debe reponer</span>
     }
   </div>
 </div>

@@ -87,16 +87,29 @@
 
 .stock-info {
   font-size: .8rem;
-  color: #15803d;
   font-weight: 700;
-  background: #dcfce7;
-  padding: .2rem .6rem;
+  padding: .3rem .7rem;
   border-radius: 50px;
 }
 
-.stock-info.no-stock {
-  color: #b91c1c;
+.stock-info.available {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.stock-info.agotado {
+  color: #991b1b;
   background: #fee2e2;
+  animation: pulse-warning 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .actions-grid {
@@ -184,12 +197,17 @@
 }
 
 .out-of-stock {
-  font-size: .8rem;
-  color: #ef4444;
-  font-weight: 700;
-  padding: .3rem .7rem;
+  display: block;
+  text-align: center;
+  color: #991b1b;
   background: #fef2f2;
-  border-radius: 50px;
+  border: 2px solid #fee2e2;
+  font-weight: 700;
+  font-size: .85rem;
+  padding: .6rem .5rem;
+  border-radius: .4rem;
+  margin-top: .5rem;
+  animation: pulse-warning 1.5s ease-in-out infinite;
 }
 
 @media (max-width: 560px) {
