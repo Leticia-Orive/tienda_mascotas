@@ -21,8 +21,10 @@
           <!-- Precio y stock -->
           <div class="price-stock-info">
             <span class="price">{{ product.precio | currency: 'EUR' }}</span>
-            @if (product.stock < 5) {
-              <span class="stock-warning">Stock bajo: {{ product.stock }} unidades</span>
+            @if (product.stock < 1) {
+              <span class="stock-warning">⚠️ AGOTADO</span>
+            } @else if (product.stock < 6) {
+              <span class="stock-warning">⏳ Ultimas unidades: {{ product.stock }}</span>
             } @else {
               <span class="stock-ok">Stock: {{ product.stock }} unidades</span>
             }
