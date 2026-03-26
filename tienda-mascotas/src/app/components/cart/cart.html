@@ -19,7 +19,7 @@
 					<div class="cart-item-controls">
 						<button class="qty-btn" (click)="cartService.actualizarCantidad(item.product.id, item.cantidad - 1)">-</button>
 						<span class="qty">{{ item.cantidad }}</span>
-						<button class="qty-btn" (click)="cartService.actualizarCantidad(item.product.id, item.cantidad + 1)">+</button>
+						<button class="qty-btn" (click)="cartService.actualizarCantidad(item.product.id, item.cantidad + 1)" [disabled]="item.cantidad >= item.product.stock">+</button>
 					</div>
 					<span class="item-subtotal">{{ item.product.precio * item.cantidad | currency:'EUR':'symbol':'1.2-2':'es' }}</span>
 					<button class="btn-remove" (click)="cartService.eliminarDelCarrito(item.product.id)">✕</button>

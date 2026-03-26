@@ -169,7 +169,17 @@ export class CartComponent {
 
     const descuentoActual = this.discountAmount;
 
-    this.cartService.registrarPedido(metodoPago, this.puntoRecogidaSeleccionado, this.direccionDomicilio, descuentoActual);
+    const pedidoConfirmado = this.cartService.registrarPedido(
+      metodoPago,
+      this.puntoRecogidaSeleccionado,
+      this.direccionDomicilio,
+      descuentoActual
+    );
+
+    if (!pedidoConfirmado) {
+      alert('No hay stock suficiente para uno o mas productos del carrito. Revisa las cantidades e intenta de nuevo.');
+      return;
+    }
 
     // Si hay descuento activo, lo consume (resta 1 uso) antes de vaciar el carrito.
     // Informa al cliente cuantos usos le quedan o si ya los agoto todos.

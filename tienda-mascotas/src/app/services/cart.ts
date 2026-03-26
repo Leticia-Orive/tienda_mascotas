@@ -1,4 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
+import { PRODUCTS } from '../data/products.data';
 import { CartItem, MetodoPago, Pedido, PuntoRecogida, Product } from '../models/product.model';
 
 @Injectable({
@@ -7,6 +8,7 @@ import { CartItem, MetodoPago, Pedido, PuntoRecogida, Product } from '../models/
 export class CartService {
   private readonly pedidosStorageKeyPrefix = 'petshop.pedidos';
   private readonly cartStorageKeyPrefix = 'petshop.cart';
+  private readonly productStorageKey = 'petshop.products';
   private activeCartOwnerEmail: string | null = null;
   private activePedidosOwnerEmail: string | null = null;
 
@@ -32,6 +34,10 @@ export class CartService {
     const items = this._items();
     const existing = items.find(i => i.product.id === product.id);
     if (existing) {
+      if (existing.cantidad >= product.stock) {
+        return;
+      }
+
       // Si ya existe el producto, incrementa su cantidad.
       this._items.set(
         items.map(i =>
@@ -54,14 +60,26 @@ export class CartService {
   }
 
   actualizarCantidad(productId: number, cantidad: number): void {
+    const item = this._items().find(i => i.product.id === productId);
+    if (!item) {
+      return;
+    }
+
     if (cantidad < 1) {
       // Evita cantidades invalidas; elimina el item si llega a 0.
       this.eliminarDelCarrito(productId);
       return;
     }
+
+    const cantidadAjustada = Math.min(cantidad, item.product.stock);
+    if (cantidadAjustada < 1) {
+      this.eliminarDelCarrito(productId);
+      return;
+    }
+
     this._items.set(
       this._items().map(i =>
-        i.product.id === productId ? { ...i, cantidad } : i
+        i.product.id === productId ? { ...i, cantidad: cantidadAjustada } : i
       )
     );
 
@@ -120,10 +138,22 @@ export class CartService {
     }
   }
 
-  registrarPedido(metodoPago: MetodoPago, puntoRecogida: PuntoRecogida, direccionDomicilio: string, descuentoAplicado: number): void {
+  registrarPedido(metodoPago: MetodoPago, puntoRecogida: PuntoRecogida, direccionDomicilio: string, descuentoAplicado: number): boolean {
+    const catalogoActual = this.cargarCatalogoProductos();
+    const stockPorProducto = new Map<number, number>(catalogoActual.map(producto => [producto.id, producto.stock]));
+
+    const hayStockInsuficiente = this._items().some(item => {
+      const stockDisponible = stockPorProducto.get(item.product.id) ?? item.product.stock;
+      return item.cantidad > stockDisponible;
+    });
+
+    if (hayStockInsuficiente) {
+      return false;
+    }
+
     if (!this.activePedidosOwnerEmail) {
       this._items.set([]);
-      return;
+      return true;
     }
 
     const subtotal = this.totalPrice();
@@ -149,6 +179,9 @@ export class CartService {
 
     this._pedidos.set([nuevoPedido, ...this._pedidos()]);
     this.guardarPedidos();
+
+    this.descontarStockCatalogo(catalogoActual);
+    return true;
   }
 
   private cargarPedidosUsuario(email: string): Pedido[] {
@@ -209,6 +242,51 @@ export class CartService {
 
   private getPedidosStorageKey(email: string): string {
     return `${this.pedidosStorageKeyPrefix}.${email}`;
+  }
+
+  private cargarCatalogoProductos(): Product[] {
+    try {
+      const raw = localStorage.getItem(this.productStorageKey);
+      if (!raw) {
+        return [...PRODUCTS];
+      }
+
+      const parsed = JSON.parse(raw) as Product[];
+      if (!Array.isArray(parsed)) {
+        return [...PRODUCTS];
+      }
+
+      return parsed;
+    } catch {
+      return [...PRODUCTS];
+    }
+  }
+
+  private descontarStockCatalogo(catalogoActual: Product[]): void {
+    const stockCompradoPorId = new Map<number, number>();
+
+    for (const item of this._items()) {
+      const actual = stockCompradoPorId.get(item.product.id) ?? 0;
+      stockCompradoPorId.set(item.product.id, actual + item.cantidad);
+    }
+
+    const catalogoActualizado = catalogoActual.map(producto => {
+      const comprado = stockCompradoPorId.get(producto.id) ?? 0;
+      if (comprado < 1) {
+        return producto;
+      }
+
+      return {
+        ...producto,
+        stock: Math.max(0, producto.stock - comprado),
+      };
+    });
+
+    try {
+      localStorage.setItem(this.productStorageKey, JSON.stringify(catalogoActualizado));
+    } catch {
+      // Si localStorage falla, no debe bloquear la compra.
+    }
   }
 }
 
