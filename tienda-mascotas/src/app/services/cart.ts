@@ -151,36 +151,37 @@ export class CartService {
       return false;
     }
 
-    if (!this.activePedidosOwnerEmail) {
-      this._items.set([]);
-      return true;
+    // Descuenta el stock del catalogo (para usuarios registrados e invitados).
+    this.descontarStockCatalogo(catalogoActual);
+
+    // Solo guarda el pedido si el usuario esta registrado.
+    if (this.activePedidosOwnerEmail) {
+      const subtotal = this.totalPrice();
+      const descuento = Math.max(0, descuentoAplicado);
+      const totalFinal = Math.max(0, subtotal - descuento);
+
+      const nuevoPedido: Pedido = {
+        id: `PED-${Date.now()}`,
+        fechaIso: new Date().toISOString(),
+        metodoPago,
+        puntoRecogida,
+        ...(puntoRecogida === 'domicilio' && { direccionDomicilio }),
+        subtotal,
+        descuento,
+        totalFinal,
+        items: this._items().map(item => ({
+          productId: item.product.id,
+          nombre: item.product.nombre,
+          precioUnitario: item.product.precio,
+          cantidad: item.cantidad,
+        })),
+      };
+
+      this._pedidos.set([nuevoPedido, ...this._pedidos()]);
+      this.guardarPedidos();
     }
 
-    const subtotal = this.totalPrice();
-    const descuento = Math.max(0, descuentoAplicado);
-    const totalFinal = Math.max(0, subtotal - descuento);
-
-    const nuevoPedido: Pedido = {
-      id: `PED-${Date.now()}`,
-      fechaIso: new Date().toISOString(),
-      metodoPago,
-      puntoRecogida,
-      ...(puntoRecogida === 'domicilio' && { direccionDomicilio }),
-      subtotal,
-      descuento,
-      totalFinal,
-      items: this._items().map(item => ({
-        productId: item.product.id,
-        nombre: item.product.nombre,
-        precioUnitario: item.product.precio,
-        cantidad: item.cantidad,
-      })),
-    };
-
-    this._pedidos.set([nuevoPedido, ...this._pedidos()]);
-    this.guardarPedidos();
-
-    this.descontarStockCatalogo(catalogoActual);
+    this._items.set([]);
     return true;
   }
 
