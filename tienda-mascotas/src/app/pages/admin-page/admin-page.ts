@@ -56,9 +56,6 @@ export class AdminPage {
   // Estado del formulario de próximos productos
   formularioVisible = false;
   modoFormulario: 'crear' | 'editar' = 'crear';
-
-  formularioVisible = false;
-  modoFormulario: 'crear' | 'editar' = 'crear';
   upcomingEditId: number | null = null; // ID del producto que se está editando
   upcomingErrorMessage = ''; // Mensaje de error del formulario
   upcomingSuccessMessage = ''; // Mensaje de éxito del formulario
