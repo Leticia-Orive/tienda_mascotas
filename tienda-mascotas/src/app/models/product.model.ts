@@ -10,6 +10,16 @@ export interface Product {
   stock: number;
 }
 
+export interface UpcomingProduct {
+  id: number;
+  nombre: string;
+  categoria: Categoria;
+  descripcion: string;
+  lanzamiento: string;
+  precioEstimado: number;
+  imagen: string;
+}
+
 export interface CartItem {
   product: Product;
   cantidad: number;

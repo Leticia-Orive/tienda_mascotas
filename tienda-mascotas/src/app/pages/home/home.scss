@@ -38,3 +38,89 @@
   margin-bottom: 1.5rem;
   color: var(--text);
 }
+
+.upcoming-section {
+  max-width: 1280px;
+  margin: 0 auto 2.5rem;
+  padding: 0 1.5rem;
+}
+
+.upcoming-header {
+  margin-bottom: 1.2rem;
+}
+
+.upcoming-subtitle {
+  color: var(--text-light);
+  margin-top: -.7rem;
+}
+
+.upcoming-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.upcoming-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.upcoming-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.upcoming-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.upcoming-body {
+  padding: 1rem;
+}
+
+.upcoming-category {
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 10%, white);
+  border-radius: 999px;
+  padding: .2rem .55rem;
+}
+
+.upcoming-name {
+  margin: .65rem 0 .45rem;
+  font-size: 1.04rem;
+  color: var(--text);
+}
+
+.upcoming-description {
+  margin: 0;
+  color: var(--text-light);
+  line-height: 1.55;
+  font-size: .95rem;
+}
+
+.upcoming-meta {
+  margin-top: .8rem;
+  display: flex;
+  flex-direction: column;
+  gap: .28rem;
+  font-weight: 600;
+}
+
+.upcoming-date {
+  color: var(--text);
+}
+
+.upcoming-price {
+  color: var(--primary);
+}

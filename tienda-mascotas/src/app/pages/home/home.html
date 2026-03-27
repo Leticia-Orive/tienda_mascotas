@@ -13,3 +13,32 @@
 	<h2 class="section-title">Nuestros Productos</h2>
 	<app-product-list />
 </div>
+
+<section class="upcoming-section" aria-labelledby="upcoming-title">
+	<div class="upcoming-header">
+		<h2 id="upcoming-title" class="section-title">Proximos productos en tienda</h2>
+		<p class="upcoming-subtitle">Novedades que llegaran en las proximas semanas.</p>
+	</div>
+
+	<div class="upcoming-grid">
+		@for (producto of proximosProductos(); track producto.id) {
+			<article class="upcoming-card">
+				<img
+					[src]="producto.imagen"
+					[alt]="producto.nombre"
+					class="upcoming-image"
+					loading="lazy"
+				/>
+				<div class="upcoming-body">
+					<span class="upcoming-category">{{ producto.categoria }}</span>
+					<h3 class="upcoming-name">{{ producto.nombre }}</h3>
+					<p class="upcoming-description">{{ producto.descripcion }}</p>
+					<div class="upcoming-meta">
+						<span class="upcoming-date">Lanzamiento: {{ producto.lanzamiento }}</span>
+						<span class="upcoming-price">Desde {{ producto.precioEstimado }} EUR</span>
+					</div>
+				</div>
+			</article>
+		}
+	</div>
+</section>
