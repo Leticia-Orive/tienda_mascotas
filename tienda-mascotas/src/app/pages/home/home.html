@@ -1,44 +1,134 @@
 <div class="hero">
-	<div class="hero-content">
-		<h1 class="hero-title">🐾 Bienvenido a <span>PetShop</span></h1>
-		<p class="hero-subtitle">
-			Todo lo que tu mascota necesita, en un solo lugar.<br>
-			Alimento, juguetes, accesorios y cuidado de calidad.
-		</p>
-		<a href="#catalogo" class="btn-primary hero-btn">Ver Catálogo</a>
-	</div>
+  <div class="hero-content">
+    <h1 class="hero-title">Bienvenido a <span>PetShop</span></h1>
+    <p class="hero-subtitle">
+      Todo lo que tu mascota necesita, en un solo lugar.<br>
+      Alimento, juguetes, accesorios y cuidado de calidad.
+    </p>
+    <div class="hero-actions">
+      <a href="#catalogo" class="btn-primary hero-btn">Ver Catalogo</a>
+      <a href="#contacto" class="hero-btn hero-btn-secondary">Contactar tienda</a>
+    </div>
+  </div>
 </div>
 
 <div id="catalogo" class="catalog-section">
-	<h2 class="section-title">Nuestros Productos</h2>
-	<app-product-list />
+  <h2 class="section-title">Nuestros Productos</h2>
+  <app-product-list />
 </div>
 
 <section class="upcoming-section" aria-labelledby="upcoming-title">
-	<div class="upcoming-header">
-		<h2 id="upcoming-title" class="section-title">Proximos productos en tienda</h2>
-		<p class="upcoming-subtitle">Novedades que llegaran en las proximas semanas.</p>
-	</div>
+  <div class="upcoming-header">
+    <h2 id="upcoming-title" class="section-title">Proximos productos en tienda</h2>
+    <p class="upcoming-subtitle">Novedades que llegaran en las proximas semanas.</p>
+  </div>
 
-	<div class="upcoming-grid">
-		@for (producto of proximosProductos(); track producto.id) {
-			<article class="upcoming-card">
-				<img
-					[src]="producto.imagen"
-					[alt]="producto.nombre"
-					class="upcoming-image"
-					loading="lazy"
-				/>
-				<div class="upcoming-body">
-					<span class="upcoming-category">{{ producto.categoria }}</span>
-					<h3 class="upcoming-name">{{ producto.nombre }}</h3>
-					<p class="upcoming-description">{{ producto.descripcion }}</p>
-					<div class="upcoming-meta">
-						<span class="upcoming-date">Lanzamiento: {{ producto.lanzamiento }}</span>
-						<span class="upcoming-price">Desde {{ producto.precioEstimado }} EUR</span>
-					</div>
-				</div>
-			</article>
-		}
-	</div>
+  <div class="upcoming-grid">
+    @for (producto of proximosProductos(); track producto.id) {
+      <article class="upcoming-card">
+        <img
+          [src]="producto.imagen"
+          [alt]="producto.nombre"
+          class="upcoming-image"
+          loading="lazy"
+        />
+        <div class="upcoming-body">
+          <span class="upcoming-category">{{ producto.categoria }}</span>
+          <h3 class="upcoming-name">{{ producto.nombre }}</h3>
+          <p class="upcoming-description">{{ producto.descripcion }}</p>
+          <div class="upcoming-meta">
+            <span class="upcoming-date">Lanzamiento: {{ producto.lanzamiento }}</span>
+            <span class="upcoming-price">Desde {{ producto.precioEstimado }} EUR</span>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
 </section>
+
+<section id="contacto" class="contact-section" aria-labelledby="contact-title">
+  <div class="contact-intro">
+    <p class="contact-eyebrow">Atencion al cliente</p>
+    <h2 id="contact-title" class="section-title">Contacta con la tienda</h2>
+    <p class="contact-subtitle">
+      Tanto si ya compras con nosotros como si aun no eres cliente, puedes escribirnos y te ayudamos.
+    </p>
+  </div>
+
+  <div class="contact-layout">
+    <article class="contact-card contact-details">
+      <h3>Datos de contacto</h3>
+      <p>Respondemos dudas sobre pedidos, stock, proximos lanzamientos y recomendaciones para mascotas.</p>
+
+      <div class="contact-detail-list">
+        <a class="contact-detail" [href]="'mailto:' + contacto.email">
+          <span class="contact-label">Correo</span>
+          <strong>{{ contacto.email }}</strong>
+        </a>
+        <a class="contact-detail" [href]="'tel:' + contacto.telefono.replaceAll(' ', '')">
+          <span class="contact-label">Telefono</span>
+          <strong>{{ contacto.telefono }}</strong>
+        </a>
+        <div class="contact-detail">
+          <span class="contact-label">Direccion</span>
+          <strong>{{ contacto.direccion }}</strong>
+        </div>
+        <div class="contact-detail">
+          <span class="contact-label">Horario</span>
+          <strong>{{ contacto.horario }}</strong>
+        </div>
+      </div>
+    </article>
+
+    <article class="contact-card contact-form-card">
+      <h3>Mandanos un mensaje</h3>
+      <p>El formulario abrira tu correo con el mensaje preparado para enviarlo a la tienda.</p>
+
+      @if (contactoErrorMessage) {
+        <p class="contact-feedback error">{{ contactoErrorMessage }}</p>
+      }
+
+      @if (contactoSuccessMessage) {
+        <p class="contact-feedback ok">{{ contactoSuccessMessage }}</p>
+      }
+
+      <form class="contact-form" (ngSubmit)="enviarMensajeContacto()">
+        <label>
+          Nombre
+          <input
+            type="text"
+            name="contactoNombre"
+            [(ngModel)]="formularioContacto.nombre"
+            placeholder="Tu nombre"
+            required
+          >
+        </label>
+
+        <label>
+          Correo electronico
+          <input
+            type="email"
+            name="contactoEmail"
+            [(ngModel)]="formularioContacto.email"
+            placeholder="tu-correo@ejemplo.com"
+            required
+          >
+        </label>
+
+        <label>
+          Mensaje
+          <textarea
+            name="contactoMensaje"
+            rows="5"
+            [(ngModel)]="formularioContacto.mensaje"
+            placeholder="Escribe aqui tu consulta"
+            required
+          ></textarea>
+        </label>
+
+        <button type="submit" class="btn-primary contact-submit">Enviar mensaje</button>
+      </form>
+    </article>
+  </div>
+</section>
+
