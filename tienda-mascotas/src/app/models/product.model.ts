@@ -10,6 +10,27 @@ export interface Product {
   stock: number;
 }
 
+/**
+ * Interfaz para productos próximos a lanzar
+ *
+ * QUÉ ES:
+ * Define la estructura de datos para productos que aún no están disponibles en tienda
+ * pero que se mostrarán en la sección "Próximos productos" de la home.
+ *
+ * PARA QUÉ SIRVE:
+ * - Tipificar los datos de productos futuros
+ * - Diferenciar entre productos actuales (Product) y próximos (UpcomingProduct)
+ * - Validar datos en formularios de admin
+ *
+ * CAMPOS:
+ * - id: Identificador único (típicamente 100+)
+ * - nombre: Nombre del producto
+ * - categoria: Tipo de producto (alimento, juguetes, accesorios, cuidado)
+ * - descripcion: Detalles del producto
+ * - lanzamiento: Mes/fecha estimada de lanzamiento (ej: "Julio 2026")
+ * - precioEstimado: Precio aproximado antes del lanzamiento
+ * - imagen: URL de la imagen del producto
+ */
 export interface UpcomingProduct {
   id: number;
   nombre: string;

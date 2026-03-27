@@ -1,3 +1,21 @@
+/**
+ * Archivo de datos iniciales para próximos productos
+ *
+ * QUÉ ES:
+ * Define el array UPCOMING_PRODUCTS con los datos hardcodeados de próximos lanzamientos.
+ * Actúa como seed/datos por defecto que se cargan al iniciar la aplicación.
+ *
+ * PARA QUÉ SIRVE:
+ * - Proporcionar datos iniciales si no hay datos guardados en localStorage
+ * - Servir de referencia/ejemplo de la estructura de datos esperada
+ * - Permitir resetear a valores por defecto si es necesario
+ *
+ * FUNCIONALIDAD:
+ * - Cada producto tiene: id único (100+), nombre, categoría, descripción,
+ *   fecha de lanzamiento, precio estimado e imagen
+ * - Se importa en UpcomingProductsService para comparar/validar al cargar
+ * - Se renderiza en la Home cuando no hay datos persistidos
+ */
 import { UpcomingProduct } from '../models/product.model';
 
 export const UPCOMING_PRODUCTS: UpcomingProduct[] = [
