@@ -26,7 +26,7 @@ export const UPCOMING_PRODUCTS: UpcomingProduct[] = [
     descripcion: 'Sistema autolimpiante con filtro antiolor y control desde app para mantener siempre limpio el espacio de tu gato.',
     lanzamiento: 'Abril 2026',
     precioEstimado: 219.90,
-    imagen: 'https://placehold.co/340x220/e3f2fd/0d47a1?text=Arenero+AutoClean',
+    imagen: '/img/arenero.webp',
   },
   {
     id: 102,
@@ -35,7 +35,7 @@ export const UPCOMING_PRODUCTS: UpcomingProduct[] = [
     descripcion: 'Premio diario con probioticos y textura especial para reducir placa y cuidar la salud bucal en perros adultos.',
     lanzamiento: 'Mayo 2026',
     precioEstimado: 14.95,
-    imagen: 'https://placehold.co/340x220/fff8e1/f9a825?text=Snack+Dental',
+    imagen: '/img/snacks_perro.webp',
   },
   {
     id: 103,
@@ -44,6 +44,6 @@ export const UPCOMING_PRODUCTS: UpcomingProduct[] = [
     descripcion: 'Fuente silenciosa con sensor de movimiento y triple filtrado para incentivar la hidratacion de gatos y perros pequenos.',
     lanzamiento: 'Junio 2026',
     precioEstimado: 64.50,
-    imagen: 'https://placehold.co/340x220/e0f7fa/00695c?text=SmartFlow+Mini',
+    imagen: '/img/fuente_de_agua.webp',
   },
 ];

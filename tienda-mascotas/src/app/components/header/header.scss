@@ -25,7 +25,14 @@
   font-weight: 800;
   color: var(--primary);
 
-  .logo-icon { font-size: 1.8rem; }
+  .logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
   .logo-text { letter-spacing: -0.5px; }
 }
 

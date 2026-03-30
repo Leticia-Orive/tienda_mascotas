@@ -217,7 +217,16 @@ export class ProductList {
         return [...PRODUCTS];
       }
 
-      return parsed;
+      // Migra imagenes antiguas de placeholders remotos a imagenes locales.
+      const imageById = new Map(PRODUCTS.map(product => [product.id, product.imagen]));
+      return parsed.map(item => {
+        if (!item.imagen.startsWith('https://placehold.co/')) {
+          return item;
+        }
+
+        const localImage = imageById.get(item.id);
+        return localImage ? { ...item, imagen: localImage } : item;
+      });
     } catch {
       return [...PRODUCTS];
     }

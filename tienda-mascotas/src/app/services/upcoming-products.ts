@@ -121,7 +121,7 @@ export class UpcomingProductsService {
       }
 
       // Valida cada producto guardado para evitar corrupción de datos
-      return parsed.filter(item =>
+      const sanitized = parsed.filter(item =>
         typeof item.id === 'number' &&
         typeof item.nombre === 'string' &&
         typeof item.descripcion === 'string' &&
@@ -130,6 +130,17 @@ export class UpcomingProductsService {
         typeof item.imagen === 'string' &&
         ['alimento', 'juguetes', 'accesorios', 'cuidado'].includes(item.categoria)
       ) as UpcomingProduct[];
+
+      // Migra imagenes antiguas de placeholders remotos a imagenes locales.
+      const imageById = new Map(UPCOMING_PRODUCTS.map(product => [product.id, product.imagen]));
+      return sanitized.map(item => {
+        if (!item.imagen.startsWith('https://placehold.co/')) {
+          return item;
+        }
+
+        const localImage = imageById.get(item.id);
+        return localImage ? { ...item, imagen: localImage } : item;
+      });
     } catch {
       // Si hay error al parsear, retorna datos por defecto
       return [...UPCOMING_PRODUCTS];
