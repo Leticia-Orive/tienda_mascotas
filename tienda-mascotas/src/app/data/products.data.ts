@@ -142,5 +142,50 @@ export const PRODUCTS: Product[] = [
     imagen: '/img/cortauñas.webp',
     categoria: 'cuidado',
     stock: 22
+  },
+  {
+    id: 16,
+    nombre: 'Pienso Hipoalergénico para Perro Sensible',
+    descripcion: 'Fórmula especial para perros con alergias e intolerancias. Sin gluten, pollo ni productos lácteos.',
+    precio: 54.99,
+    imagen: '/img/pienso_hipoalergenico.webp',
+    categoria: 'alimento',
+    stock: 18
+  },
+  {
+    id: 17,
+    nombre: 'Comedero Automático con Temporizador',
+    descripcion: 'Dispensador automático de alimento con 5 compartimentos y timer programable. Control por app incluido.',
+    precio: 45.50,
+    imagen: '/img/comedero_automatico.webp',
+    categoria: 'accesorios',
+    stock: 14
+  },
+  {
+    id: 18,
+    nombre: 'Juguete Pelota Interactiva Luz LED',
+    descripcion: 'Pelota con luz LED y sonido que rebota automáticamente. Estimulación mental y ejercicio ideal para perros.',
+    precio: 22.99,
+    imagen: '/img/pelota_led.webp',
+    categoria: 'juguetes',
+    stock: 32
+  },
+  {
+    id: 19,
+    nombre: 'Spray Repelente Natural Pulgas',
+    descripcion: 'Spray preventivo natural a base de aceites esenciales. Protección rápida contra pulgas y ácaros.',
+    precio: 13.75,
+    imagen: '/img/spray_pulgas.webp',
+    categoria: 'cuidado',
+    stock: 50
+  },
+  {
+    id: 20,
+    nombre: 'Arnés de Seguridad Acolchado',
+    descripcion: 'Arnés resistente y cómodo con acolchamiento ergonómico. Ideal para paseos largos y viajes seguros.',
+    precio: 29.95,
+    imagen: '/img/arnes_acolchado.webp',
+    categoria: 'accesorios',
+    stock: 26
   }
 ];
